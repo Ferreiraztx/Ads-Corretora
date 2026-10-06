@@ -4,6 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Andréia | Corretora de Imóveis",
   description: "Imóveis em Curitiba e Região",
+  icon: "/imagens/logo.png",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
