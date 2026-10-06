@@ -81,8 +81,9 @@ export default function AdminPanel() {
     const dados = new FormData();
     dados.append("file", arquivo);
     const resposta = await fetch("/api/upload", { method: "POST", headers: { "x-admin-password": senha }, body: dados });
-    if (!resposta.ok) throw new Error((await resposta.json()).erro);
-    return (await resposta.json()).url as string;
+    const resultado = await resposta.json().catch(() => null) as { erro?: string; url?: string } | null;
+    if (!resposta.ok || !resultado?.url) throw new Error(resultado?.erro || "Não foi possível enviar a imagem.");
+    return resultado.url;
   }
 
   async function salvar(event: FormEvent) {
@@ -97,7 +98,8 @@ export default function AdminPanel() {
         headers: { "Content-Type": "application/json", "x-admin-password": senha },
         body: JSON.stringify(corpo),
       });
-      if (!resposta.ok) throw new Error((await resposta.json()).erro || "Não foi possível salvar o imóvel.");
+      const resultado = await resposta.json().catch(() => null) as { erro?: string } | null;
+      if (!resposta.ok) throw new Error(resultado?.erro || "Não foi possível salvar o imóvel.");
       setMensagem(editando ? "Imóvel atualizado com sucesso." : "Imóvel cadastrado com sucesso.");
       limparFormulario();
       carregar();

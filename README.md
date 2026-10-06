@@ -29,9 +29,11 @@ npx prisma db push
 npm run db:seed
 ```
 
-Na Vercel, adicione `DATABASE_URL` e `ADMIN_PASSWORD` em **Settings > Environment Variables** para os ambientes de produção e preview. O valor de `DATABASE_URL` deve começar com `postgresql://` ou `postgres://`.
+Na Vercel, adicione `DATABASE_URL`, `ADMIN_PASSWORD` e `BLOB_READ_WRITE_TOKEN` em **Settings > Environment Variables** para os ambientes de produção e preview. O valor de `DATABASE_URL` deve começar com `postgresql://` ou `postgres://`. O `BLOB_READ_WRITE_TOKEN` é criado automaticamente ao conectar um Blob Store ao projeto.
 
 O SQLite usado anteriormente era apenas local e não deve ser usado na Vercel.
+
+As fotos enviadas pelo painel são armazenadas no Vercel Blob, porque o sistema de arquivos da Vercel não é persistente.
 
 ## APIs
 
