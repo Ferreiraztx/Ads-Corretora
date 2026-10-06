@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <rect width="800" height="500" fill="#e9edf0"/>
+  <path d="M170 290 400 100l230 190v130H170Z" fill="#073a70"/>
+  <path d="m125 295 275-225 275 225-35 42L400 130 160 337Z" fill="#c28a2b"/>
+  <rect x="335" y="285" width="130" height="135" fill="#fff"/>
+  <text x="400" y="465" text-anchor="middle" font-family="Arial" font-size="28" fill="#18212b">Foto do imóvel</text>
+</svg>
