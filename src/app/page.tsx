@@ -5,6 +5,8 @@ import { ContatoForm } from "./ContatoForm";
 
 const whatsapp = "https://wa.me/5541992371353";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const imoveis = await prisma.imovel.findMany({ where: { disponivel: true }, orderBy: { createdAt: "desc" } });
 

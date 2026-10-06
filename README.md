@@ -1,6 +1,6 @@
 # Andréia Corretora
 
-Site da corretora migrado para Next.js, React e TypeScript, com banco SQLite usando Prisma.
+Site da corretora migrado para Next.js, React e TypeScript, com banco PostgreSQL usando Prisma.
 
 ## Executar localmente
 
@@ -22,7 +22,16 @@ O painel permite cadastrar e remover imóveis. As imagens podem ser substituída
 
 ## Banco de dados
 
-O banco local é `prisma/dev.db` e não deve ser versionado. Para trocar para PostgreSQL em produção, altere o `provider` e `DATABASE_URL` no Prisma antes de publicar.
+O projeto usa PostgreSQL. Configure `DATABASE_URL` com a URL fornecida pelo seu provedor (Neon, Render ou Vercel Postgres) e execute:
+
+```bash
+npx prisma db push
+npm run db:seed
+```
+
+Na Vercel, adicione `DATABASE_URL` e `ADMIN_PASSWORD` em **Settings > Environment Variables** para os ambientes de produção e preview. O valor de `DATABASE_URL` deve começar com `postgresql://` ou `postgres://`.
+
+O SQLite usado anteriormente era apenas local e não deve ser usado na Vercel.
 
 ## APIs
 
