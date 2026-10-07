@@ -22,6 +22,18 @@ model Imovel {
   disponivel  Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  fotos       FotoImovel[]
+}
+
+model FotoImovel {
+  id        Int      @id @default(autoincrement())
+  url       String
+  ordem     Int      @default(0)
+  imovelId  Int
+  imovel    Imovel   @relation(fields: [imovelId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([imovelId, ordem])
 }
 
 model Interessado {

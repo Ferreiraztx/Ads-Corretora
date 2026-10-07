@@ -7,7 +7,7 @@ function dadosValidos(dados: Record<string, unknown>) {
 }
 
 export async function GET() {
-  const imoveis = await prisma.imovel.findMany({ orderBy: { createdAt: "desc" } });
+  const imoveis = await prisma.imovel.findMany({ include: { fotos: { orderBy: { ordem: "asc" } } }, orderBy: { createdAt: "desc" } });
   return NextResponse.json(imoveis);
 }
 
@@ -25,5 +25,10 @@ export async function POST(request: Request) {
       area: dados.area ? Number(dados.area) : null, imagemUrl: dados.imagemUrl || "/imagens/imovel-placeholder.svg",
     },
   });
+  const fotos = Array.isArray(dados.fotos) ? dados.fotos.filter((foto: unknown): foto is string => typeof foto === "string" && foto.length > 0) : [];
+  if (fotos.length) {
+    await prisma.fotoImovel.createMany({ data: fotos.map((url: string, ordem: number) => ({ imovelId: imovel.id, url, ordem })) });
+    return NextResponse.json(await prisma.imovel.findUnique({ where: { id: imovel.id }, include: { fotos: { orderBy: { ordem: "asc" } } } }), { status: 201 });
+  }
   return NextResponse.json(imovel, { status: 201 });
 }
