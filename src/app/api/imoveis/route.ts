@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-
-function autorizado(request: Request) {
-  return request.headers.get("x-admin-password") === process.env.ADMIN_PASSWORD;
-}
+import { isAuthorized } from "@/lib/admin-auth";
 
 function dadosValidos(dados: Record<string, unknown>) {
   return Boolean(dados.titulo && dados.tipo && dados.cidade && dados.preco !== undefined && Number.isFinite(Number(dados.preco)));
@@ -15,7 +12,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  if (!autorizado(request)) return NextResponse.json({ erro: "Não autorizado." }, { status: 401 });
+  if (!isAuthorized(request)) return NextResponse.json({ erro: "Não autorizado." }, { status: 401 });
   const dados = await request.json();
   if (!dadosValidos(dados)) {
     return NextResponse.json({ erro: "Título, tipo, cidade e preço são obrigatórios." }, { status: 400 });

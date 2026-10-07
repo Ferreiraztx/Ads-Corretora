@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-
-function autorizado(request: Request) {
-  return request.headers.get("x-admin-password") === process.env.ADMIN_PASSWORD;
-}
+import { isAuthorized } from "@/lib/admin-auth";
 
 export async function PUT(request: Request, context: { params: Promise<{ id: string }> }) {
-  if (!autorizado(request)) return NextResponse.json({ erro: "Não autorizado." }, { status: 401 });
+  if (!isAuthorized(request)) return NextResponse.json({ erro: "Não autorizado." }, { status: 401 });
   const id = Number((await context.params).id);
   const dados = await request.json();
   if (!Number.isInteger(id) || !dados.titulo || !dados.tipo || !dados.cidade || !Number.isFinite(Number(dados.preco))) {
@@ -26,7 +23,7 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
 }
 
 export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
-  if (!autorizado(request)) return NextResponse.json({ erro: "Não autorizado." }, { status: 401 });
+  if (!isAuthorized(request)) return NextResponse.json({ erro: "Não autorizado." }, { status: 401 });
   const id = Number((await context.params).id);
   if (!Number.isInteger(id)) return NextResponse.json({ erro: "ID inválido." }, { status: 400 });
   await prisma.imovel.delete({ where: { id } });

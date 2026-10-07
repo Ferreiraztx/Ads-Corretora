@@ -1,8 +1,9 @@
 import { put } from "@vercel/blob";
 import { NextResponse } from "next/server";
+import { isAuthorized } from "@/lib/admin-auth";
 
 export async function POST(request: Request) {
-  if (request.headers.get("x-admin-password") !== process.env.ADMIN_PASSWORD) {
+  if (!isAuthorized(request)) {
     return NextResponse.json({ erro: "Não autorizado." }, { status: 401 });
   }
   const dados = await request.formData();
