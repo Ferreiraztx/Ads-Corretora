@@ -18,7 +18,7 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
   const imoveis = await prisma.imovel.findMany({
     where: { disponivel: true },
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ destaque: "desc" }, { ordem: "asc" }, { createdAt: "desc" }],
   });
 
   return (
@@ -92,7 +92,8 @@ export default async function Home() {
                 <p>Nenhum imóvel disponível no momento.</p>
               ) : (
                 imoveis.map((imovel) => (
-                  <article className="card" key={imovel.id}>
+                  <article className={`card${imovel.destaque ? " featured-card" : ""}`} key={imovel.id}>
+                    {imovel.destaque && <span className="featured-badge">Destaque</span>}
                     <Link
                       className="card-link"
                       href={`/imoveis/${imovel.id}`}

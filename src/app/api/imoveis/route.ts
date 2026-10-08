@@ -7,7 +7,7 @@ function dadosValidos(dados: Record<string, unknown>) {
 }
 
 export async function GET() {
-  const imoveis = await prisma.imovel.findMany({ include: { fotos: { orderBy: { ordem: "asc" } } }, orderBy: { createdAt: "desc" } });
+  const imoveis = await prisma.imovel.findMany({ include: { fotos: { orderBy: { ordem: "asc" } } }, orderBy: [{ destaque: "desc" }, { ordem: "asc" }, { createdAt: "desc" }] });
   return NextResponse.json(imoveis);
 }
 
@@ -23,6 +23,7 @@ export async function POST(request: Request) {
       estado: String(dados.estado || "PR"), preco: Number(dados.preco), descricao: dados.descricao || null,
       quartos: dados.quartos ? Number(dados.quartos) : null, banheiros: dados.banheiros ? Number(dados.banheiros) : null,
       area: dados.area ? Number(dados.area) : null, imagemUrl: dados.imagemUrl || "/imagens/imovel-placeholder.svg",
+      destaque: dados.destaque === true, ordem: Number.isInteger(Number(dados.ordem)) ? Number(dados.ordem) : ((await prisma.imovel.aggregate({ _max: { ordem: true } }))._max.ordem ?? -1) + 1,
     },
   });
   const fotos = Array.isArray(dados.fotos) ? dados.fotos.filter((foto: unknown): foto is string => typeof foto === "string" && foto.length > 0) : [];

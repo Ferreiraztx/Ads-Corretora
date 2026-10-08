@@ -25,6 +25,8 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
       quartos: dados.quartos ? Number(dados.quartos) : null, banheiros: dados.banheiros ? Number(dados.banheiros) : null,
       area: dados.area ? Number(dados.area) : null, imagemUrl: dados.imagemUrl || "/imagens/imovel-placeholder.svg",
       disponivel: dados.disponivel !== false,
+      destaque: dados.destaque === true,
+      ordem: Number.isInteger(Number(dados.ordem)) ? Number(dados.ordem) : undefined,
     },
   });
   if (Array.isArray(dados.fotos)) {
