@@ -37,9 +37,9 @@ function SortablePendingPhoto({ foto, index, onRemove }: { foto: FotoPendente; i
 }
 
 function SortableProperty({ imovel, onEdit, onRemove }: { imovel: Imovel; onEdit: () => void; onRemove: () => void }) {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: imovel.id });
-  return <article ref={setNodeRef} className="property-item" style={{ transform: CSS.Transform.toString(transform), transition }}>
-    <div className="property-image"><Image src={imovel.fotos?.[0]?.url || imovel.imagemUrl || placeholder} alt="" fill sizes="300px" /><span className={imovel.disponivel ? "status available" : "status unavailable"}>{imovel.disponivel ? "Publicado" : "Oculto"}</span>{imovel.destaque && <span className="featured-badge">Destaque</span>}</div>
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: imovel.id });
+  return <article ref={setNodeRef} className={`property-item${isDragging ? " dragging" : ""}`} style={{ transform: CSS.Transform.toString(transform), transition }}>
+    <div className="property-image"><Image src={imovel.fotos?.[0]?.url || imovel.imagemUrl || placeholder} alt="" fill sizes="300px" /><span className={imovel.disponivel ? "status available" : "status unavailable"}>{imovel.disponivel ? "Publicado" : "Oculto"}</span>{imovel.destaque && <span className="featured-badge">Destaque</span>}<span className="property-order">Posição {imovel.ordem + 1}</span></div>
     <div className="property-content"><span>{imovel.tipo} · {imovel.cidade}/{imovel.estado}</span><h3>{imovel.titulo}</h3><strong>{Number(imovel.preco) > 0 ? Number(imovel.preco).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) : "Consulte o valor"}</strong><div className="property-actions"><button type="button" className="drag-handle" {...attributes} {...listeners} aria-label="Arrastar imóvel"><GripVertical size={14} /></button><button type="button" onClick={onEdit}><Pencil size={14} /> Editar</button><a className="whatsapp-card" href={`${whatsapp}?text=${encodeURIComponent(`Olá, tenho interesse no imóvel: ${imovel.titulo}`)}`} target="_blank" rel="noopener noreferrer"><MessageCircle size={14} /> WhatsApp</a><button className="delete-button" type="button" onClick={onRemove}><Trash2 size={14} /></button></div></div>
   </article>;
 }
