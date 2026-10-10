@@ -238,7 +238,7 @@ export default async function Home() {
         </section>
       </main>
 
-      <footer>© 2026 Andréia Corretora de Imóveis • CRECI-PR F 58517</footer>
+      <footer>© 2026 Andréia Corretora de Imóveis • CRECI-PR F 58517 - Desenvolvido por Matheus Ferreira</footer>
     </>
   );
 }
