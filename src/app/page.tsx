@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
+import PropertyFilters from "./PropertyFilters";
 
 const whatsapp = "https://wa.me/5541992371353";
 
@@ -20,6 +21,16 @@ export default async function Home() {
     where: { disponivel: true },
     orderBy: [{ destaque: "desc" }, { ordem: "asc" }, { createdAt: "desc" }],
   });
+  const properties = imoveis.map((imovel) => ({
+    id: imovel.id,
+    titulo: imovel.titulo,
+    tipo: imovel.tipo,
+    cidade: imovel.cidade,
+    estado: imovel.estado,
+    preco: Number(imovel.preco),
+    imagemUrl: imovel.imagemUrl,
+    destaque: imovel.destaque,
+  }));
 
   return (
     <>
@@ -87,63 +98,7 @@ export default async function Home() {
               <p>Encontre seu próximo imóvel em Curitiba e Região.</p>
             </div>
 
-            <div className="cards">
-              {imoveis.length === 0 ? (
-                <p>Nenhum imóvel disponível no momento.</p>
-              ) : (
-                imoveis.map((imovel) => (
-                  <article className={`card${imovel.destaque ? " featured-card" : ""}`} key={imovel.id}>
-                    {imovel.destaque && <span className="featured-badge">Destaque</span>}
-                    <Link
-                      className="card-link"
-                      href={`/imoveis/${imovel.id}`}
-                    >
-                      <div className="photo">
-                        <Image
-                          src={
-                            imovel.imagemUrl ||
-                            "/imagens/imovel-placeholder.svg"
-                          }
-                          alt={imovel.titulo}
-                          fill
-                          sizes="(max-width: 800px) 92vw, 350px"
-                        />
-                      </div>
-
-                      <div className="body">
-                        <h3>{imovel.titulo}</h3>
-                        <p>
-                          {imovel.cidade}/{imovel.estado}
-                        </p>
-                        <div className="price">
-                          {Number(imovel.preco) > 0
-                            ? Number(imovel.preco).toLocaleString("pt-BR", {
-                                style: "currency",
-                                currency: "BRL",
-                              })
-                            : "Consulte o valor"}
-                        </div>
-                        <span className="btn gold">Ver detalhes</span>
-                      </div>
-                    </Link>
-
-                    <div className="card-contact">
-                      <a
-                        className="btn gold"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href={`${whatsapp}?text=${encodeURIComponent(
-                          `Olá, tenho interesse no imóvel: ${imovel.titulo}`,
-                        )}`}
-                      >
-                        <MessageCircle size={17} />
-                        Tenho interesse
-                      </a>
-                    </div>
-                  </article>
-                ))
-              )}
-            </div>
+            <PropertyFilters properties={properties} />
           </div>
         </section>
 
